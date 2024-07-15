@@ -1,0 +1,120 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+*{
+  font-family: 'consolas'!important;
+}
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.container{
+  position: relative;
+  margin: auto;
+  height: 90vh;
+  width: 70vw;
+  background-color:#f0f0f0;
+  border: 2px solid #000;
+  border-radius: 15px;
+}
+
+.header{
+  display: flex;
+  justify-content: space-between;
+  font-size: 25px;
+  color: red;
+  margin: 0 10px;
+}
+.button-mode button{
+  width: 37px;
+}
+.input-box{
+  width: 70%;
+  margin: auto;
+  position: relative;
+}
+.input-container input{
+  width: 100%;
+  border: 1px solid #000;
+  padding: 5px;
+  height: 30px;
+  border-radius: 3px;
+}
+.input-container button{
+  position: absolute;
+  right: 1px;
+  background-color: #443131;
+  color: #fff;
+  padding: 0 10px;
+  height: 92%;
+  bottom: 1px;
+}
+.input-container button:hover{
+  background-color: #f08282;
+  color: #fff;
+}
+.content{
+  width: 70%; 
+  margin:20px auto 0;
+
+}
+.item-container{
+  position: relative;
+  display: flex;
+  border-bottom: solid 1px #8d7979;
+}
+.item-id{
+  width: 30px;
+  margin-right: 10px;
+  text-align: center;
+}
+.checked p{
+  text-decoration: line-through;
+  font-style: italic;
+  opacity: 0.8;
+}
+.filter{
+  width: 100%;
+  margin: auto;
+  position: absolute;
+  bottom: 5px;
+}
+.options{
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+.options button{
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 4px;
+  background-color: aqua;
+}
+.icons{
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  right: 10px;
+  bottom: 5px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+.icon{
+  color: rgb(241, 151, 151);
+  cursor: pointer;
+}
+
+.active{
+  background-color: salmon !important;
+}
