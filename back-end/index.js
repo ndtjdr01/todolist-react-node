@@ -1,11 +1,9 @@
 const express = require('express')
 const app = express()
-const cors = require('cors')
 const todoRouter = require('./model/router')
 
 require('./database')
 
-app.use(cors())
 app.use(express.json())
 
 app.use('/api/todo/',todoRouter)
