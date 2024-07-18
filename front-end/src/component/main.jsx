@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import axios from "axios"
 import Item from "./itemtile/item"
 import InputBox from "./input/input"
@@ -10,19 +10,38 @@ export default function TodoList() {
     const [editItemStore, setEditItemStore] = useState([])
     const { items, inputValue, isEdit, filter, cpitems } = useSelector(state => state.items)
     const dispatch = useDispatch()
+    const inputRef =useRef(null)
 
+    // edit item
     useEffect(() => {
         if (isEdit) {
             dispatch(setInputValue(editItemStore.text))
         }
         // eslint-disable-next-line
     }, [isEdit])
-
+    // getitem
     useEffect(() => {
         getItem()
         // eslint-disable-next-line
     }, [])
-    // function handleSearch(value){}
+    // event keydown
+    useEffect(() => {
+        const handleKeydown = (event) => {
+            if (inputRef.current && document.activeElement === inputRef.current) {
+                return; // Ngăn chặn sự kiện keydown khi input đang focus
+              }
+            if (event.key === '/') {
+                dispatch(setCurrentInput('search'))
+            } else if (event.key === '+') {
+                dispatch(setCurrentInput('add'))
+            }
+        }
+        document.addEventListener('keydown', handleKeydown)
+        return () => {
+            document.removeEventListener('keydown', handleKeydown)
+        }
+    }, [dispatch])
+
     async function getItem() {
         try {
             setloading(true)
@@ -62,7 +81,11 @@ export default function TodoList() {
         try {
             const id = item._id
             await axios.delete(`http://localhost:5000/api/todo/delete-todo/${id}`)
-            await getItem()
+            const newItems= [...items]
+            const deleteItem= newItems.filter(item =>item._id === id)
+            newItems.splice(newItems.indexOf(deleteItem[0]), 1)       
+            dispatch(setItems(newItems))
+            // dispatch(setCpItems(newItems))
         }
         catch (e) {
             console.log(e)
@@ -72,18 +95,19 @@ export default function TodoList() {
     function updateItem(item) {
         dispatch(setIsEdit(true))
         setEditItemStore(item)
+        inputRef.current.focus();
     }
-    function handleSearch(e) {
-        e.preventDefault();
-        const searchValue = inputValue.trim().toLowerCase();
-        if (searchValue === '') {
-            dispatch(setItems(cpitems))
-            return;
-        }
+
+    function handleSearch(e,input) {
+        e.preventDefault()
+        // const searchValue = inputValue.trim().toLowerCase();
         const testItem = cpitems.filter(item =>
-            item.text.trim().toLowerCase().includes(searchValue)
+            item.text.trim().toLowerCase().includes(input || input === ''?input:inputValue.trim().toLowerCase())
         );
+        console.log('input' +input)
+        console.log('inputValue' +inputValue)
         dispatch(setItems(testItem));
+        // console.log(items)
     }
 
     const filterItems = (items, filter) => {
@@ -99,17 +123,22 @@ export default function TodoList() {
     }
     const filterItemsList = filterItems(items, filter);
 
+    function reset(){
+        getItem()
+        dispatch(setInputValue(''));
+    }
+
     return (
         <div className="container">
             <div className="header">
-                <h1>Todos</h1>
+                <h1 onClick={reset}>Todos</h1>
                 <div className="button-mode">
                     <button onClick={() => dispatch(setCurrentInput('add'))}>+</button>
                     <button onClick={() => dispatch(setCurrentInput('search'))}>/</button>
                 </div>
             </div>
             <div className="input-container">
-                <InputBox handleAddNew={handleAddNew} handleSearch={handleSearch} />
+                <InputBox inputRef={inputRef} handleAddNew={handleAddNew} handleSearch={handleSearch} />
             </div>
 
             <div className="content">

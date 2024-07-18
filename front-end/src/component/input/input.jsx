@@ -1,14 +1,19 @@
 import { useDispatch, useSelector } from "react-redux"
-import { setCurrentInput, setInputValue } from "../../store/items/slice-item"
+import { setInputValue } from "../../store/items/slice-item"
 
-export default function InputBox({ handleAddNew, handleSearch }) {
+export default function InputBox({inputRef, handleAddNew, handleSearch }) {
     const dispatch = useDispatch()
     const { inputValue, currentInput } = useSelector(state => state.items)
+    function handleChange(e){
+        const input = e.target.value
+        dispatch(setInputValue(input))
+        handleSearch(e,input)
+    }
 
     if (currentInput === 'add') return (
         <div className="input-box" >
             <form action="" onSubmit={handleAddNew}>
-                <input name="add-input" autoFocus type="text" placeholder="add new" value={inputValue}
+                <input ref={inputRef} name="add-input" autoFocus type="text" placeholder="add new" value={inputValue}
                     onChange={(e) => dispatch(setInputValue(e.target.value))} />
                 <button>Add</button>
             </form>
@@ -17,8 +22,8 @@ export default function InputBox({ handleAddNew, handleSearch }) {
     else return (
         <div className="input-box" >
             <form action="" onSubmit={handleSearch}>
-                <input name="search-input" autoFocus type="text" placeholder="search value" value={inputValue}
-                    onChange={(e) => dispatch(setInputValue(e.target.value))} />
+                <input ref={inputRef} name="search-input" autoFocus type="text" placeholder="search value" value={inputValue}
+                    onChange={(e) => handleChange(e)} />
                 <button >Search</button>
             </form>
         </div>
